@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Md Arifur Rahman — Applied ML Engineer & Researcher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0F1417;
+    --panel:#161C21;
+    --panel-2:#1C242B;
+    --text:#E7ECEF;
+    --text-dim:#8FA0AC;
+    --text-faint:#5A6E7A;
+    --accent:#4CE0B3;
+    --accent-soft:rgba(76,224,179,0.14);
+    --amber:#F2A93C;
+    --amber-soft:rgba(242,169,60,0.14);
+    --line:#26313A;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --sans: 'IBM Plex Sans', system-ui, sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.55;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px;
+    background-position:center top;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important;}
+  }
+  a{color:inherit;}
+  .wrap{max-width:1040px; margin:0 auto; padding:0 28px;}
+  ::selection{background:var(--accent); color:#0F1417;}
+
+  /* NAV */
+  header.nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(15,20,23,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:1040px; margin:0 auto; padding:16px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .nav-mark{
+    font-family:var(--mono); font-weight:600; font-size:14px;
+    color:var(--accent); letter-spacing:0.06em;
+    display:flex; align-items:center; gap:8px;
+  }
+  .nav-mark .dot{width:7px;height:7px;border-radius:50%;background:var(--accent); box-shadow:0 0 8px var(--accent);}
+  nav.links{display:flex; gap:28px;}
+  nav.links a{
+    font-family:var(--mono); font-size:12.5px; color:var(--text-dim);
+    text-decoration:none; letter-spacing:0.04em; text-transform:uppercase;
+    transition:color 0.2s;
+  }
+  nav.links a:hover{color:var(--accent);}
+  .nav-toggle{display:none; background:none; border:1px solid var(--line); color:var(--text); font-family:var(--mono); padding:6px 10px; border-radius:4px;}
+
+  /* HERO */
+  .hero{padding:88px 0 56px; position:relative;}
+  .quick-links{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:26px;}
+  .quick-links a{
+    font-family:var(--mono); font-size:12px; color:var(--text-dim);
+    border:1px solid var(--line); padding:6px 12px; border-radius:20px;
+    text-decoration:none; transition:all 0.2s;
+  }
+  .quick-links a:hover{border-color:var(--accent); color:var(--accent);}
+  .eyebrow{
+    font-family:var(--mono); font-size:12.5px; color:var(--accent);
+    letter-spacing:0.14em; text-transform:uppercase; margin-bottom:18px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:'';width:20px;height:1px;background:var(--accent);}
+  h1.name{
+    font-family:var(--mono); font-weight:700; font-size:clamp(34px,6vw,58px);
+    letter-spacing:-0.01em; line-height:1.06; color:var(--text);
+    margin-bottom:14px;
+  }
+  .role-line{
+    font-size:clamp(16px,2.2vw,20px); color:var(--text-dim); max-width:640px;
+    margin-bottom:36px; font-weight:400;
+  }
+  .role-line strong{color:var(--text); font-weight:600;}
+
+  /* Waveform */
+  .scope{
+    border:1px solid var(--line); border-radius:8px; background:var(--panel);
+    padding:18px 20px 14px; margin-bottom:30px; position:relative; overflow:hidden;
+  }
+  .scope-head{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-family:var(--mono); font-size:11px; color:var(--text-faint);
+    letter-spacing:0.08em; text-transform:uppercase; margin-bottom:6px;
+  }
+  .scope-head .live{color:var(--accent);}
+  .scope svg{display:block; width:100%; height:auto;}
+  #trace{stroke-dasharray:1400; stroke-dashoffset:1400; animation:draw 2.4s ease-out forwards;}
+  @keyframes draw{to{stroke-dashoffset:0;}}
+  .anomaly-dot{opacity:0; animation:appear 0.6s ease forwards 2.1s;}
+  .anomaly-pulse{animation:pulse 2.2s ease-in-out infinite 2.7s;}
+  @keyframes appear{to{opacity:1;}}
+  @keyframes pulse{0%,100%{opacity:0.9; r:4.5;}50%{opacity:0.25; r:11;}}
+  .anomaly-label{opacity:0; animation:appear 0.6s ease forwards 2.3s; font-family:var(--mono);}
+
+  .cta-row{display:flex; gap:14px; flex-wrap:wrap;}
+  .btn{
+    font-family:var(--mono); font-size:13px; padding:11px 20px; border-radius:6px;
+    text-decoration:none; letter-spacing:0.03em; transition:all 0.2s; border:1px solid transparent;
+  }
+  .btn-primary{background:var(--accent); color:#0B1512; font-weight:600;}
+  .btn-primary:hover{background:#3fc9a0;}
+  .btn-ghost{border-color:var(--line); color:var(--text-dim);}
+  .btn-ghost:hover{border-color:var(--accent); color:var(--accent);}
+
+  /* STAT STRIP */
+  .stats{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--line); border:1px solid var(--line); border-radius:8px; overflow:hidden;
+    margin:40px 0 0;
+  }
+  .stat{background:var(--panel); padding:18px 16px;}
+  .stat .num{font-family:var(--mono); font-size:22px; font-weight:700; color:var(--accent);}
+  .stat .label{font-size:12px; color:var(--text-dim); margin-top:4px;}
+
+  /* SECTION HEADERS */
+  section{padding:64px 0;}
+  .sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:34px;}
+  .sec-tag{font-family:var(--mono); font-size:12px; color:var(--text-faint); letter-spacing:0.1em;}
+  h2.sec-title{font-family:var(--mono); font-size:24px; font-weight:600; color:var(--text);}
+  .sec-rule{flex:1; height:1px; background:var(--line);}
+
+  .lede{color:var(--text-dim); max-width:680px; font-size:15.5px;}
+
+  /* TIMELINE (signal-strip) */
+  .timeline{position:relative; padding-left:28px; border-left:1px solid var(--line); margin-top:30px;}
+  .tl-item{position:relative; padding-bottom:38px;}
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-item::before{
+    content:''; position:absolute; left:-33px; top:4px; width:9px; height:9px;
+    border-radius:50%; background:var(--bg); border:2px solid var(--accent);
+  }
+  .tl-date{font-family:var(--mono); font-size:11.5px; color:var(--accent); letter-spacing:0.06em; margin-bottom:6px;}
+  .tl-role{font-weight:600; font-size:16.5px; color:var(--text); margin-bottom:2px;}
+  .tl-org{font-size:13.5px; color:var(--text-dim); margin-bottom:10px; font-family:var(--mono);}
+  .tl-desc{color:var(--text-dim); font-size:14.5px; max-width:640px;}
+  .tl-desc ul{margin:10px 0 0 18px;}
+  .tl-desc li{margin-bottom:6px;}
+
+  /* PROJECTS GRID */
+  .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-top:30px;}
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:8px;
+    padding:22px; display:flex; flex-direction:column; gap:12px; transition:border-color 0.2s, transform 0.2s;
+  }
+  .card:hover{border-color:var(--accent); transform:translateY(-2px);}
+  .card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+  .card-title{font-weight:600; font-size:16px; color:var(--text);}
+  .readout{
+    font-family:var(--mono); font-size:13px; color:var(--accent);
+    background:var(--accent-soft); padding:3px 9px; border-radius:4px; white-space:nowrap;
+  }
+  .card-desc{color:var(--text-dim); font-size:13.8px; flex:1;}
+  .tags{display:flex; flex-wrap:wrap; gap:6px;}
+  .tag{font-family:var(--mono); font-size:11px; color:var(--text-faint); border:1px solid var(--line); padding:3px 8px; border-radius:4px;}
+  .card-link{font-family:var(--mono); font-size:12.5px; color:var(--text-dim); text-decoration:none; display:inline-flex; align-items:center; gap:6px;}
+  .card-link:hover{color:var(--accent);}
+
+  /* PUBLICATIONS */
+  .pub-list{margin-top:26px; border-top:1px solid var(--line);}
+  .pub{
+    display:grid; grid-template-columns:64px 1fr auto; gap:18px; align-items:baseline;
+    padding:16px 0; border-bottom:1px solid var(--line);
+  }
+  .pub-year{font-family:var(--mono); color:var(--text-faint); font-size:13px;}
+  .pub-title{font-size:14.5px; color:var(--text);}
+  .pub-venue{font-size:12.5px; color:var(--text-dim); font-style:italic; margin-top:3px;}
+  .pub-metric{font-family:var(--mono); font-size:12px; color:var(--amber); white-space:nowrap; text-align:right;}
+  .pub-links{margin-top:6px; display:flex; gap:14px;}
+  .pub-links a{font-family:var(--mono); font-size:12px; color:var(--accent); text-decoration:none;}
+  .pub-links a:hover{text-decoration:underline;}
+  .pub-link-pending{font-family:var(--mono); font-size:11.5px; color:var(--text-faint); font-style:italic;}
+
+  /* SKILLS spectrum */
+  .skill-groups{display:grid; grid-template-columns:1fr 1fr; gap:34px; margin-top:30px;}
+  .skill-group h3{font-family:var(--mono); font-size:12.5px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:16px;}
+  .bar-row{margin-bottom:13px;}
+  .bar-label{display:flex; justify-content:space-between; font-size:13px; color:var(--text-dim); margin-bottom:5px; font-family:var(--mono);}
+  .bar-track{height:5px; background:var(--line); border-radius:3px; overflow:hidden;}
+  .bar-fill{height:100%; background:var(--accent); border-radius:3px; width:0; transition:width 1.2s ease;}
+
+  /* EDUCATION */
+  .edu-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-top:28px;}
+  .edu-card{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:18px;}
+  .edu-degree{font-weight:600; font-size:14.5px; margin-bottom:4px;}
+  .edu-school{font-size:12.5px; color:var(--text-dim); font-family:var(--mono); margin-bottom:8px;}
+  .edu-note{font-size:12.5px; color:var(--text-faint);}
+  .cert-strip{margin-top:22px; display:flex; flex-wrap:wrap; gap:8px;}
+  .cert-strip span{font-family:var(--mono); font-size:11.5px; color:var(--text-dim); border:1px solid var(--line); padding:5px 10px; border-radius:4px;}
+
+  /* FOOTER / CONTACT */
+  footer{border-top:1px solid var(--line); padding:56px 0 46px;}
+  .contact-title{font-family:var(--mono); font-size:26px; font-weight:600; margin-bottom:12px;}
+  .contact-sub{color:var(--text-dim); max-width:520px; margin-bottom:28px; font-size:14.5px;}
+  .contact-links{display:flex; flex-wrap:wrap; gap:12px;}
+  .contact-links a{
+    font-family:var(--mono); font-size:13px; padding:10px 16px; border:1px solid var(--line);
+    border-radius:6px; text-decoration:none; color:var(--text-dim); transition:all 0.2s;
+  }
+  .contact-links a:hover{border-color:var(--accent); color:var(--accent);}
+  .foot-note{margin-top:40px; font-size:12px; color:var(--text-faint); font-family:var(--mono);}
+
+  @media(max-width:760px){
+    nav.links{display:none;}
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .grid{grid-template-columns:1fr;}
+    .skill-groups{grid-template-columns:1fr;}
+    .edu-grid{grid-template-columns:1fr;}
+    .pub{grid-template-columns:44px 1fr; }
+    .pub-metric{grid-column:1 / -1; text-align:left; margin-top:4px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="nav-mark"><span class="dot"></span>M. ARIFUR RAHMAN</div>
+    <nav class="links">
+      <a href="#about">About</a>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#publications">Publications</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="quick-links">
+      <a href="mailto:arifme071@gmail.com">Email ↗</a>
+      <a href="https://www.linkedin.com/in/marahman-gsu/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a href="https://github.com/arifme071" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="https://huggingface.co/arifme071" target="_blank" rel="noopener">Hugging Face ↗</a>
+      <a href="https://share.streamlit.io/user/arifme071" target="_blank" rel="noopener">Streamlit ↗</a>
+    </div>
+    <div class="eyebrow">Atlanta, GA · Available for full-time roles</div>
+    <h1 class="name">Md Arifur Rahman</h1>
+    <p class="role-line">
+      Applied <strong>machine learning engineer</strong> and <strong>operations researcher</strong> —
+      I build models that read signal from industrial noise: sensor streams, process data, and
+      optimization problems across manufacturing and rail.
+    </p>
+
+    <div class="scope">
+      <div class="scope-head">
+        <span>DAS SENSOR CHANNEL — LIVE TRACE</span>
+        <span class="live">● CNN-LSTM ANOMALY DETECTION</span>
+      </div>
+      <svg viewBox="0 0 1000 160" preserveAspectRatio="none" aria-hidden="true">
+        <line x1="0" y1="40" x2="1000" y2="40" stroke="#26313A" stroke-width="1"/>
+        <line x1="0" y1="80" x2="1000" y2="80" stroke="#26313A" stroke-width="1"/>
+        <line x1="0" y1="120" x2="1000" y2="120" stroke="#26313A" stroke-width="1"/>
+        <path id="trace" d="M0,80 C30,78 60,82 90,80 C130,79 150,76 180,80 C220,84 240,78 270,80
+          C310,81 330,60 345,45 C355,36 360,110 370,95 C385,73 400,80 430,80
+          C470,79 490,82 520,80 C560,78 580,80 610,80 C650,81 670,79 700,80
+          C740,80 760,79 790,80 C830,81 850,80 880,80 C920,80 940,79 970,80 L1000,80"
+          fill="none" stroke="#4CE0B3" stroke-width="2"/>
+        <circle class="anomaly-dot anomaly-pulse" cx="355" cy="45" r="4.5" fill="#F2A93C"/>
+        <text class="anomaly-label" x="368" y="30" fill="#F2A93C" font-size="12">anomaly · 97% detection confidence</text>
+      </svg>
+    </div>
+
+    <div class="cta-row">
+      <a class="btn btn-primary" href="Rahman_Resume_MLEngineer_MidLevel.docx" download>Download résumé</a>
+      <a class="btn btn-ghost" href="#projects">View projects</a>
+      <a class="btn btn-ghost" href="#contact">Get in touch</a>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="num">10</div><div class="label">Publications</div></div>
+      <div class="stat"><div class="num">250+</div><div class="label">Citations</div></div>
+      <div class="stat"><div class="num">97%</div><div class="label">Best anomaly detection accuracy</div></div>
+      <div class="stat"><div class="num">5%</div><div class="label">Material utilization gain, WAAM</div></div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="sec-head">
+      <span class="sec-tag">01</span>
+      <h2 class="sec-title">About</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="lede">
+      I work at the intersection of sensing, optimization, and decision-making — mostly on problems
+      where the data is noisy, the constraints are real, and the answer needs to hold up in production.
+      That's meant fiber-optic acoustic sensing on live rail lines, reinforcement learning for additive
+      manufacturing, and RAG systems that ground answers in published research instead of guessing.
+      Recently I won the Best in Show Poster Award at Georgia AIM's Emerging Innovators Ceremony for
+      acoustic-driven monitoring work in wire arc additive manufacturing. I'm currently a PIN Fellow at
+      Georgia Tech and currently in the OMSCS program.
+    </p>
+    <p class="lede" style="margin-top:14px;">
+      <span style="color:var(--text-faint); font-family:var(--mono); font-size:12.5px; text-transform:uppercase; letter-spacing:0.08em;">Outside of work</span> —
+      gardening, soccer, and cooking.
+    </p>
+  </section>
+
+  <section id="experience">
+    <div class="sec-head">
+      <span class="sec-tag">02</span>
+      <h2 class="sec-title">Experience</h2>
+      <div class="sec-rule"></div>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-date">07/2025 — PRESENT</div>
+        <div class="tl-role">AI/ML Research Engineer — PIN Fellow</div>
+        <div class="tl-org">Partnership for Innovation (Georgia Tech) · Atlanta, GA</div>
+        <div class="tl-desc">
+          Applied optimization research under the Georgia-AIM grant, closing the loop between sensing,
+          state estimation, and decision-making for industrial assets.
+          <ul>
+            <li>Built a production RAG knowledge assistant (LangChain, FAISS, Docker) live on Hugging Face Spaces, and fine-tuned BERT, RoBERTa, and LoRA Mistral-7B via PEFT/QLoRA.</li>
+            <li>Designed a reinforcement learning + Hidden Markov Model pipeline for real-time WAAM process control — a 5% gain in material utilization.</li>
+            <li>Ran multi-objective optimization with ML surrogate models across competing cost, throughput, and constraint variables.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">01/2024 — 03/2025</div>
+        <div class="tl-role">Supervisor Associate — Mechanical Maintenance</div>
+        <div class="tl-org">Norfolk Southern Corporation · Atlanta, GA</div>
+        <div class="tl-desc">
+          Built data pipelines and decision-support dashboards for railcar condition reporting across
+          the network.
+          <ul>
+            <li>Developed Alteryx/SQL pipelines and GIS-enabled Power BI/Tableau dashboards, adopted company-wide.</li>
+            <li>Cut inspection turnaround time by 5% through workflow bottleneck analysis.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">08/2022 — 12/2023</div>
+        <div class="tl-role">Research Assistant — ML & Data Analytics</div>
+        <div class="tl-org">Georgia Southern University (LANDTIE Lab) · Statesboro, GA</div>
+        <div class="tl-desc">
+          Rail safety research with MxV Rail using live fiber-optic distributed acoustic sensing (DAS)
+          from active rail operations.
+          <ul>
+            <li>Built CNN-LSTM and GRU anomaly detection models — 97% and 94% detection accuracy on live DAS datasets.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="sec-head">
+      <span class="sec-tag">03</span>
+      <h2 class="sec-title">Selected projects</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="lede" style="margin-bottom:0;">Production systems and research code — all shipped end to end, from data to deployment.</p>
+
+    <div class="grid">
+      <div class="card">
+        <div class="card-top">
+          <div class="card-title">Engineering Knowledge RAG</div>
+          <div class="readout">live demo</div>
+        </div>
+        <div class="card-desc">Production RAG pipeline grounded in 7 peer-reviewed publications — retrieves via FAISS + SentenceTransformers, generates citation-backed answers with Flan-T5. Zero hallucination on domain specifics.</div>
+        <div class="tags"><span class="tag">FAISS</span><span class="tag">LangChain</span><span class="tag">Flan-T5</span><span class="tag">Docker</span></div>
+        <a class="card-link" href="https://github.com/arifme071/engineering-knowledge-rag" target="_blank" rel="noopener">github.com/arifme071/engineering-knowledge-rag ↗</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <div class="card-title">Warehouse Visual Intelligence</div>
+          <div class="readout">5-agent system</div>
+        </div>
+        <div class="card-desc">Multi-agent pipeline (Vision → Layout → Anomaly → Cost → Orchestrator) for real-time warehouse safety monitoring — outputs $/day cost impact per detected inefficiency.</div>
+        <div class="tags"><span class="tag">YOLOv8</span><span class="tag">CrewAI</span><span class="tag">GCP Vision</span><span class="tag">FastAPI</span></div>
+        <a class="card-link" href="https://github.com/arifme071/warehouse-visual-intelligence" target="_blank" rel="noopener">github.com/arifme071/warehouse-visual-intelligence ↗</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <div class="card-title">LLM Fine-Tuning — Engineering Domain</div>
+          <div class="readout">95.8% acc</div>
+        </div>
+        <div class="card-desc">Two fine-tuning pipelines on railroad and manufacturing text: BERT/RoBERTa classification and Mistral-7B instruction tuning with LoRA at 0.06% trainable parameters via QLoRA.</div>
+        <div class="tags"><span class="tag">BERT</span><span class="tag">RoBERTa</span><span class="tag">Mistral-7B</span><span class="tag">QLoRA</span></div>
+        <a class="card-link" href="https://github.com/arifme071/llm-finetuning-engineering-domain" target="_blank" rel="noopener">github.com/arifme071/llm-finetuning-engineering-domain ↗</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <div class="card-title">CV Manufacturing Defect Detection</div>
+          <div class="readout">95.2% mAP@50</div>
+        </div>
+        <div class="card-desc">Real-time surface defect detection for steel manufacturing on the NEU benchmark. Exported to Intel OpenVINO IR for 2–4× CPU inference speedup.</div>
+        <div class="tags"><span class="tag">YOLOv8</span><span class="tag">OpenVINO</span><span class="tag">Streamlit</span></div>
+        <a class="card-link" href="https://github.com/arifme071/cv-manufacturing-defect-detection" target="_blank" rel="noopener">github.com/arifme071/cv-manufacturing-defect-detection ↗</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <div class="card-title">Railroad Anomaly Detection — CNN-LSTM</div>
+          <div class="readout">97% detection</div>
+        </div>
+        <div class="card-desc">Hybrid CNN-LSTM with sliding window for condition monitoring via distributed acoustic sensing, on live fiber-optic datasets from AAR/TTCI, Pueblo CO. Published, Elsevier 2024.</div>
+        <div class="tags"><span class="tag">TensorFlow</span><span class="tag">Signal Processing</span><span class="tag">Time-Series</span></div>
+        <a class="card-link" href="https://github.com/arifme071/railroad-anomaly-detection-cnn-lstm" target="_blank" rel="noopener">github.com/arifme071/railroad-anomaly-detection-cnn-lstm ↗</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <div class="card-title">Last-Mile Delivery Optimization</div>
+          <div class="readout">exact MIP</div>
+        </div>
+        <div class="card-desc">Capacitated VRP with time windows solved via Gurobi and OR-Tools, with XGBoost demand forecasting and a Streamlit dashboard for scenario/sensitivity analysis.</div>
+        <div class="tags"><span class="tag">Gurobi</span><span class="tag">OR-Tools</span><span class="tag">XGBoost</span></div>
+        <a class="card-link" href="https://github.com/arifme071/ai-last-mile-delivery-optimization" target="_blank" rel="noopener">github.com/arifme071/ai-last-mile-delivery-optimization ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="publications">
+    <div class="sec-head">
+      <span class="sec-tag">04</span>
+      <h2 class="sec-title">Publications</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="pub-list">
+      <div class="pub">
+        <div class="pub-year">2026</div>
+        <div>
+          <div class="pub-title">AI-Driven (HMM-RL) Decision Support System for WAAM</div>
+          <div class="pub-venue">Springer</div>
+          <div class="pub-links"><span class="pub-link-pending">PDF / DOI pending</span></div>
+        </div>
+        <div class="pub-metric">5% material util. gain</div>
+      </div>
+      <div class="pub">
+        <div class="pub-year">2026</div>
+        <div>
+          <div class="pub-title">AI-Guided Polymer Film Synthesis Optimization</div>
+          <div class="pub-venue">Springer</div>
+          <div class="pub-links"><span class="pub-link-pending">PDF / DOI pending</span></div>
+        </div>
+        <div class="pub-metric">Manufacturing QC</div>
+      </div>
+      <div class="pub">
+        <div class="pub-year">2024</div>
+        <div>
+          <div class="pub-title">CNN-LSTM-SW for Railroad Anomaly Detection via DAS</div>
+          <div class="pub-venue">Green Energy & Intelligent Transportation, Elsevier</div>
+          <div class="pub-links">
+            <a href="https://doi.org/10.1016/j.geits.2024.100178" target="_blank" rel="noopener">PDF ↗</a>
+            <a href="https://github.com/arifme071/railroad-anomaly-detection-cnn-lstm" target="_blank" rel="noopener">Code ↗</a>
+          </div>
+        </div>
+        <div class="pub-metric">97% detection</div>
+      </div>
+      <div class="pub">
+        <div class="pub-year">2024</div>
+        <div>
+          <div class="pub-title">Deep Learning for DAS-based Railroad Condition Monitoring</div>
+          <div class="pub-venue">SPIE Journal of Applied Remote Sensing</div>
+          <div class="pub-links">
+            <a href="https://doi.org/10.1117/1.JRS.18.016512" target="_blank" rel="noopener">PDF ↗</a>
+            <a href="https://github.com/arifme071/das-railroad-gru-lstm" target="_blank" rel="noopener">Code ↗</a>
+          </div>
+        </div>
+        <div class="pub-metric">94% detection (GRU)</div>
+      </div>
+      <div class="pub">
+        <div class="pub-year">2023</div>
+        <div>
+          <div class="pub-title">Review of DAS Applications for Railroad Condition Monitoring</div>
+          <div class="pub-venue">Mechanical Systems & Signal Processing, Elsevier</div>
+          <div class="pub-links">
+            <a href="https://www.sciencedirect.com/science/article/abs/pii/S0888327023008919" target="_blank" rel="noopener">PDF ↗</a>
+          </div>
+        </div>
+        <div class="pub-metric">Widely cited review</div>
+      </div>
+      <div class="pub">
+        <div class="pub-year">2022–23</div>
+        <div>
+          <div class="pub-title">ML Models for Rail Safety & Anomaly Detection (3 papers)</div>
+          <div class="pub-venue">ASME / Springer</div>
+          <div class="pub-links"><span class="pub-link-pending">Links pending</span></div>
+        </div>
+        <div class="pub-metric">95% accuracy</div>
+      </div>
+    </div>
+    <p style="margin-top:16px; font-size:12.5px; color:var(--text-faint);">
+      <a href="https://scholar.google.com/citations?user=iafas1MAAAAJ&hl=en" target="_blank" rel="noopener" style="color:var(--accent);">Full list on Google Scholar ↗</a>
+    </p>
+  </section>
+
+  <section id="skills">
+    <div class="sec-head">
+      <span class="sec-tag">05</span>
+      <h2 class="sec-title">Skills</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="skill-groups">
+      <div class="skill-group">
+        <h3>Machine Learning & AI</h3>
+        <div class="bar-row"><div class="bar-label"><span>Deep Learning (TF / PyTorch)</span></div><div class="bar-track"><div class="bar-fill" data-w="94"></div></div></div>
+        <div class="bar-row"><div class="bar-label"><span>LLM Fine-Tuning (PEFT / LoRA / QLoRA)</span></div><div class="bar-track"><div class="bar-fill" data-w="90"></div></div></div>
+        <div class="bar-row"><div class="bar-label"><span>Computer Vision (YOLOv8)</span></div><div class="bar-track"><div class="bar-fill" data-w="88"></div></div></div>
+        <div class="bar-row"><div class="bar-label"><span>RAG / LangChain / FAISS</span></div><div class="bar-track"><div class="bar-fill" data-w="90"></div></div></div>
+        <div class="bar-row"><div class="bar-label"><span>Anomaly Detection & Forecasting</span></div><div class="bar-track"><div class="bar-fill" data-w="95"></div></div></div>
+      </div>
+      <div class="skill-group">
+        <h3>Optimization & Data Engineering</h3>
+        <div class="bar-row"><div class="bar-label"><span>MIP / LP (Gurobi, OR-Tools, CPLEX)</span></div><div class="bar-track"><div class="bar-fill" data-w="88"></div></div></div>
+        <div class="bar-row"><div class="bar-label"><span>Reinforcement Learning & HMM</span></div><div class="bar-track"><div class="bar-fill" data-w="90"></div></div></div>
+        <div class="bar-row"><div class="bar-label"><span>Python / SQL / R</span></div><div class="bar-track"><div class="bar-fill" data-w="96"></div></div></div>
+        <div class="bar-row"><div class="bar-label"><span>Cloud (AWS, GCP, Azure)</span></div><div class="bar-track"><div class="bar-fill" data-w="85"></div></div></div>
+        <div class="bar-row"><div class="bar-label"><span>Power BI / Tableau / Alteryx</span></div><div class="bar-track"><div class="bar-fill" data-w="87"></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="education">
+    <div class="sec-head">
+      <span class="sec-tag">06</span>
+      <h2 class="sec-title">Education</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="edu-grid">
+      <div class="edu-card">
+        <div class="edu-degree">MS, Computer Science (OMSCS)</div>
+        <div class="edu-school">Georgia Institute of Technology</div>
+        <div class="edu-note">Part-time · In progress</div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-degree">MS, Applied Engineering (Major: Manufacturing Engineering)</div>
+        <div class="edu-school">Georgia Southern University</div>
+        <div class="edu-note">Manufacturing Eng. · ML & Data Analytics focus · 2022–2024</div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-degree">BS, Mechanical Engineering</div>
+        <div class="edu-school">Chittagong University of Engineering & Technology</div>
+        <div class="edu-note">Bangladesh</div>
+      </div>
+    </div>
+    <div class="cert-strip">
+      <span>Google Cloud — Data Analytics Certificate</span>
+      <span>Operations Research Certification</span>
+      <span>Alteryx — Designer Core</span>
+      <span>Coursera / U. Michigan — Applied ML</span>
+      <span>Google — Generative AI Leader</span>
+      <span>IBM — Deep Learning & Neural Networks</span>
+      <span>ASME Member</span>
+      <span>ASNT Member</span>
+      <span>Gene Haas Foundation Scholar</span>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <div class="contact-title">Let's talk.</div>
+    <p class="contact-sub">
+      Open to full-time roles in ML engineering, AI/data science, and operations research —
+      no sponsorship required. Based in Atlanta, GA.
+    </p>
+    <div class="contact-links">
+      <a href="mailto:arifme071@gmail.com">arifme071@gmail.com ↗</a>
+      <a href="mailto:mdarifur.rahman@gatech.edu">mdarifur.rahman@gatech.edu ↗</a>
+      <a href="https://www.linkedin.com/in/marahman-gsu/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a href="https://github.com/arifme071" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="https://scholar.google.com/citations?user=iafas1MAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar ↗</a>
+      <a href="https://huggingface.co/arifme071" target="_blank" rel="noopener">Hugging Face ↗</a>
+      <a href="https://share.streamlit.io/user/arifme071" target="_blank" rel="noopener">Streamlit ↗</a>
+      <a href="https://orcid.org/0009-0004-8766-5351" target="_blank" rel="noopener">ORCID ↗</a>
+      <a href="Rahman_Resume_MLEngineer_MidLevel.docx" download>Résumé (.docx) ↗</a>
+    </div>
+    <div class="foot-note">© 2026 Md Arifur Rahman · Built with signal, not noise.</div>
+  </footer>
+
+</div>
+
+<script>
+  // Animate skill bars on scroll into view
+  const bars = document.querySelectorAll('.bar-fill');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.style.width = e.target.dataset.w + '%';
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold:0.3});
+  bars.forEach(b => io.observe(b));
+</script>
+
+</body>
+</html>
